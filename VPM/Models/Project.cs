@@ -19,15 +19,18 @@ namespace VPM.Models
         [StringLength(500)]
         public string Description { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [Display(Name = "Create")]
         public DateTime CreateDate { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [Display(Name = "End")]
         public DateTime? EndDate { get; set; }
-
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [Display(Name = "Delivery")]
         public DateTime? DeliveryDate { get; set; }
 
@@ -43,5 +46,11 @@ namespace VPM.Models
         public Customer Customer { get; set; }
 
         #endregion Relations
+
+        #region NotMapped
+        [NotMapped]
+        [Display(Name = "Total billable time")]
+        public string TotalBillableTime { get; set; }
+        #endregion
     }
 }

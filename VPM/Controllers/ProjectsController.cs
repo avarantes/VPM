@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VPM.Data;
@@ -32,15 +33,34 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
-                .Include(p => p.Customer)
-                .FirstOrDefaultAsync(m => m.ProjectId == id);
+            Project project = await _context.Projects.Include(p => p.Customer).FirstOrDefaultAsync(m => m.ProjectId == id);
+
             if (project == null)
             {
                 return NotFound();
             }
 
+            project.Task = _context.Task.Where(n => n.ProjectId == project.ProjectId).ToHashSet();
+
+            project.TotalBillableTime = SumBillableTime(project.Task);
+
             return View(project);
+        }
+
+        private string SumBillableTime(System.Collections.Generic.ICollection<Models.Task> tasks)
+        {
+            TimeSpan outPutSpan = new TimeSpan();
+            if (tasks.Any())
+            {
+                foreach (Models.Task task in tasks)
+                {
+                    TimeSpan taskTime = TimeSpan.Parse(task.BillableTime?.ToString("HH:mm"));
+
+                    outPutSpan += taskTime;
+                }
+                return Math.Truncate(outPutSpan.TotalHours).ToString("00") + ":" + outPutSpan.Minutes.ToString("00");
+            }
+            return "00:00";
         }
 
         // GET: Projects/Create
