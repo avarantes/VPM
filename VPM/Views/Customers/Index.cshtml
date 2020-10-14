@@ -1,0 +1,53 @@
+﻿@model IEnumerable<VPM.Models.Customer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1><i class="fa-margin-5 fas fa-user-tie"></i>Customers</h1>
+<p>
+    <a asp-action="Create">Create customer</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VatNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ZipCode)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Customer customer in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => customer.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => customer.VatNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => customer.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => customer.ZipCode)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@customer.CustomerId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@customer.CustomerId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@customer.CustomerId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
