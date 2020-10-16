@@ -7,35 +7,19 @@
 <h1><i class="fa-margin-5 fas fa-tasks"></i>Tasks</h1>
 
 <p>
-    <a asp-action="Create">Create task</a>
+    <a class="btn btn-primary" asp-action="Create">Create task</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BillableTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CostPerHour)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TaskCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Project)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.Description)</th>
+            <th>@Html.DisplayNameFor(model => model.BillableTime)</th>
+            <th>@Html.DisplayNameFor(model => model.CostPerHour)</th>
+            <th>@Html.DisplayNameFor(model => model.TaskCost)</th>
+            <th>@Html.DisplayNameFor(model => model.CreateDate)</th>
+            <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Project)</th>
             <th></th>
         </tr>
     </thead>
@@ -43,33 +27,17 @@
         @foreach (VPM.Models.Task item in Model)
         {
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.Title)</td>
+            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+            <td>@Html.DisplayFor(modelItem => item.BillableTime)</td>
+            <td>@Html.DisplayFor(modelItem => item.CostPerHour)</td>
+            <td>@Html.DisplayFor(modelItem => item.TaskCost)</td>
+            <td>@Html.DisplayFor(modelItem => item.CreateDate)</td>
+            <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+            <td>@Html.DisplayFor(modelItem => item.Project.Title)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BillableTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CostPerHour)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.TaskCost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.Title)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TaskId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TaskId">Details</a> |
+                <a  asp-action="Edit" asp-route-id="@item.TaskId">Edit</a> |
+                <a  asp-action="Details" asp-route-id="@item.TaskId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
             </td>
         </tr>

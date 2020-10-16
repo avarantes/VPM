@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VPM.Data;
@@ -13,20 +12,18 @@ namespace VPM.Controllers
     {
         private readonly VPMDBContext _context;
         private readonly ProjectServices projectServices;
+
         public CustomersController(VPMDBContext context)
         {
             _context = context;
             projectServices = new ProjectServices();
         }
 
-        // GET: Customers
         public async Task<IActionResult> Index()
         {
-
             return View(await _context.Customers.ToListAsync());
         }
 
-        // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,19 +31,19 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
+            Customer customer = await _context.Customers
                 .FirstOrDefaultAsync(m => m.CustomerId == id);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            customer.ClientProjects = await _context.Projects.Where(n => n.CustomerId == customer.CustomerId).Include(t=>t.Task).ToListAsync();
+            customer.ClientProjects = await _context.Projects.Where(n => n.CustomerId == customer.CustomerId).Include(t => t.Task).ToListAsync();
             if (customer.ClientProjects.Any())
             {
                 foreach (Project project in customer.ClientProjects)
                 {
-                    projectServices.SumBillableTime(project);                    
+                    projectServices.SumBillableTime(project);
                 }
                 projectServices.SumCustomerBillables(customer);
             }
@@ -54,15 +51,11 @@ namespace VPM.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,Name,VatNumber,Address,ZipCode")] Customer customer)
@@ -76,7 +69,6 @@ namespace VPM.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,7 +76,7 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
+            Customer customer = await _context.Customers.FindAsync(id);
             if (customer == null)
             {
                 return NotFound();
@@ -92,9 +84,6 @@ namespace VPM.Controllers
             return View(customer);
         }
 
-        // POST: Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CustomerId,Name,VatNumber,Address,ZipCode")] Customer customer)
@@ -127,7 +116,6 @@ namespace VPM.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,7 +123,7 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
+            Customer customer = await _context.Customers
                 .FirstOrDefaultAsync(m => m.CustomerId == id);
             if (customer == null)
             {
@@ -145,12 +133,11 @@ namespace VPM.Controllers
             return View(customer);
         }
 
-        // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            Customer customer = await _context.Customers.FindAsync(id);
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

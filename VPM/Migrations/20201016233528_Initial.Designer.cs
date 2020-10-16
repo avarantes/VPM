@@ -10,7 +10,7 @@ using VPM.Data;
 namespace VPM.Migrations
 {
     [DbContext(typeof(VPMDBContext))]
-    [Migration("20201015180135_Initial")]
+    [Migration("20201016233528_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -130,20 +130,29 @@ namespace VPM.Migrations
                         new
                         {
                             ProjectId = 1,
-                            CreateDate = new DateTime(2020, 10, 13, 19, 1, 34, 957, DateTimeKind.Local).AddTicks(276),
+                            CreateDate = new DateTime(2020, 10, 15, 0, 35, 28, 602, DateTimeKind.Local).AddTicks(7991),
                             CustomerId = 1,
-                            DeliveryDate = new DateTime(2020, 10, 25, 19, 1, 34, 958, DateTimeKind.Local).AddTicks(9831),
+                            DeliveryDate = new DateTime(2020, 10, 27, 0, 35, 28, 604, DateTimeKind.Local).AddTicks(8571),
                             Description = "Sample Project Description A1",
                             Title = "Sample project A1"
                         },
                         new
                         {
                             ProjectId = 2,
-                            CreateDate = new DateTime(2020, 10, 13, 19, 1, 34, 959, DateTimeKind.Local).AddTicks(1153),
+                            CreateDate = new DateTime(2020, 10, 15, 0, 35, 28, 605, DateTimeKind.Local).AddTicks(174),
                             CustomerId = 4,
-                            DeliveryDate = new DateTime(2020, 12, 4, 19, 1, 34, 959, DateTimeKind.Local).AddTicks(1185),
+                            DeliveryDate = new DateTime(2020, 12, 6, 0, 35, 28, 605, DateTimeKind.Local).AddTicks(201),
                             Description = "Sample Project Description D2",
                             Title = "Sample project D2"
+                        },
+                        new
+                        {
+                            ProjectId = 3,
+                            CreateDate = new DateTime(2020, 10, 7, 0, 35, 28, 605, DateTimeKind.Local).AddTicks(225),
+                            CustomerId = 2,
+                            DeliveryDate = new DateTime(2020, 11, 10, 0, 35, 28, 605, DateTimeKind.Local).AddTicks(228),
+                            Description = "Sample Project Description B3",
+                            Title = "Sample project B3"
                         });
                 });
 
@@ -185,6 +194,18 @@ namespace VPM.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Task");
+
+                    b.HasData(
+                        new
+                        {
+                            TaskId = 1,
+                            BillableTime = new DateTime(2020, 10, 16, 23, 45, 28, 605, DateTimeKind.Local).AddTicks(1214),
+                            CostPerHour = 4.215m,
+                            CreateDate = new DateTime(2020, 10, 15, 0, 35, 28, 605, DateTimeKind.Local).AddTicks(2643),
+                            Description = "Task Project 1",
+                            ProjectId = 1,
+                            Title = "Task Project 1"
+                        });
                 });
 
             modelBuilder.Entity("VPM.Models.Project", b =>

@@ -26,8 +26,13 @@ namespace VPM.Data
 
             modelBuilder.Entity<Project>().HasData(
                new Project { ProjectId = 1, CreateDate = DateTime.Now.AddDays(-2), CustomerId = 1, DeliveryDate = DateTime.Now.AddDays(10), Description = "Sample Project Description A1", Title = "Sample project A1" },
-               new Project { ProjectId = 2, CreateDate = DateTime.Now.AddDays(-2), CustomerId = 4, DeliveryDate = DateTime.Now.AddDays(50), Description = "Sample Project Description D2", Title = "Sample project D2" }
+               new Project { ProjectId = 2, CreateDate = DateTime.Now.AddDays(-2), CustomerId = 4, DeliveryDate = DateTime.Now.AddDays(50), Description = "Sample Project Description D2", Title = "Sample project D2" },
+               new Project { ProjectId = 3, CreateDate = DateTime.Now.AddDays(-10), CustomerId = 2, DeliveryDate = DateTime.Now.AddDays(24), Description = "Sample Project Description B3", Title = "Sample project B3" }
                );
+
+            modelBuilder.Entity<Task>().HasData(
+                new Task {TaskId = 1, BillableTime = DateTime.Now.AddMinutes(-50),CostPerHour = Convert.ToDecimal(4.03),CreateDate = DateTime.Now.AddDays(-2),Description= "Task Project 1",ProjectId=1,Title= "Task Project 1",TaskCost= Convert.ToDecimal(95.71) }
+                );
         }
     }
 }

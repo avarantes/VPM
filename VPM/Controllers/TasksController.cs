@@ -20,7 +20,6 @@ namespace VPM.Controllers
             _context = context;
         }
 
-        // GET: Tasks
         public async Task<IActionResult> Index()
         {
             IIncludableQueryable<Models.Task, Project> vPMDBContext = _context.Task.Include(t => t.Project);
@@ -29,7 +28,6 @@ namespace VPM.Controllers
             return View(tasks);
         }
 
-        // GET: Tasks/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,7 +35,7 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var task = await _context.Task
+            Models.Task task = await _context.Task
                 .Include(t => t.Project)
                 .FirstOrDefaultAsync(m => m.TaskId == id);
             if (task == null)
@@ -48,7 +46,6 @@ namespace VPM.Controllers
             return View(task);
         }
 
-        // GET: Tasks/Create
         public IActionResult Create()
         {
             ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
@@ -60,9 +57,6 @@ namespace VPM.Controllers
             return View(task);
         }
 
-        // POST: Tasks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TaskId,Title,Description,BillableTime,CreateDate,EndDate,ProjectId,CostPerHour")] Models.Task task)
@@ -91,7 +85,6 @@ namespace VPM.Controllers
             return 0;
         }
 
-        // GET: Tasks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -99,7 +92,7 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var task = await _context.Task.FindAsync(id);
+            Models.Task task = await _context.Task.FindAsync(id);
             if (task == null)
             {
                 return NotFound();
@@ -109,12 +102,9 @@ namespace VPM.Controllers
             return View(task);
         }
 
-        // POST: Tasks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TaskId,Title,Description,BillableTime,CreateDate,EndDate,ProjectId")] Models.Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("TaskId,Title,Description,BillableTime,CreateDate,EndDate,ProjectId, CostPerHour")] Models.Task task)
         {
             if (id != task.TaskId)
             {
@@ -125,6 +115,7 @@ namespace VPM.Controllers
             {
                 try
                 {
+                    task.TaskCost = CalculateTaskCost(task);
                     _context.Update(task);
                     await _context.SaveChangesAsync();
                 }
@@ -145,7 +136,6 @@ namespace VPM.Controllers
             return View(task);
         }
 
-        // GET: Tasks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -153,7 +143,7 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var task = await _context.Task
+            Models.Task task = await _context.Task
                 .Include(t => t.Project)
                 .FirstOrDefaultAsync(m => m.TaskId == id);
             if (task == null)
@@ -164,12 +154,11 @@ namespace VPM.Controllers
             return View(task);
         }
 
-        // POST: Tasks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var task = await _context.Task.FindAsync(id);
+            Models.Task task = await _context.Task.FindAsync(id);
             _context.Task.Remove(task);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

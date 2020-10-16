@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VPM.Data;
@@ -12,23 +13,21 @@ namespace VPM.Controllers
 {
     public class ProjectsController : Controller
     {
-        
         private readonly VPMDBContext _context;
         private readonly ProjectServices projectServices;
+
         public ProjectsController(VPMDBContext context)
         {
             _context = context;
             projectServices = new ProjectServices();
         }
 
-        // GET: Projects
         public async Task<IActionResult> Index()
         {
-            var vPMDBContext = _context.Projects.Include(p => p.Customer);
+            Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Project, Customer> vPMDBContext = _context.Projects.Include(p => p.Customer);
             return View(await vPMDBContext.ToListAsync());
         }
 
-        // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,22 +46,21 @@ namespace VPM.Controllers
 
             projectServices.SumBillableTime(project);
 
+            return View(project);
+        }
+
+        public IActionResult Create()
+        {
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Name");
+
+            Project project = new Project
+            {
+                CreateDate = DateTime.Now
+            };
 
             return View(project);
         }
 
-       
-
-        // GET: Projects/Create
-        public IActionResult Create()
-        {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Name");
-            return View();
-        }
-
-        // POST: Projects/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProjectId,Title,Description,CreateDate,EndDate,DeliveryDate,CustomerId")] Project project)
@@ -77,7 +75,6 @@ namespace VPM.Controllers
             return View(project);
         }
 
-        // GET: Projects/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -85,7 +82,7 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects.FindAsync(id);
+            Project project = await _context.Projects.FindAsync(id);
             if (project == null)
             {
                 return NotFound();
@@ -94,9 +91,6 @@ namespace VPM.Controllers
             return View(project);
         }
 
-        // POST: Projects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Title,Description,CreateDate,EndDate,DeliveryDate,CustomerId")] Project project)
@@ -130,7 +124,6 @@ namespace VPM.Controllers
             return View(project);
         }
 
-        // GET: Projects/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -138,7 +131,7 @@ namespace VPM.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
+            Project project = await _context.Projects
                 .Include(p => p.Customer)
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
             if (project == null)
@@ -149,12 +142,11 @@ namespace VPM.Controllers
             return View(project);
         }
 
-        // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var project = await _context.Projects.FindAsync(id);
+            Project project = await _context.Projects.FindAsync(id);
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
