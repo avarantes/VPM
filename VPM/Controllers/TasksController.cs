@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VPM.Data;
@@ -20,8 +23,10 @@ namespace VPM.Controllers
         // GET: Tasks
         public async Task<IActionResult> Index()
         {
-            var vPMDBContext = _context.Task.Include(t => t.Project);
-            return View(await vPMDBContext.ToListAsync());
+            IIncludableQueryable<Models.Task, Project> vPMDBContext = _context.Task.Include(t => t.Project);
+            List<Models.Task> tasks = await vPMDBContext.ToListAsync();
+
+            return View(tasks);
         }
 
         // GET: Tasks/Details/5
@@ -47,7 +52,12 @@ namespace VPM.Controllers
         public IActionResult Create()
         {
             ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-            return View();
+
+            Models.Task task = new Models.Task
+            {
+                CreateDate = DateTime.UtcNow
+            };
+            return View(task);
         }
 
         // POST: Tasks/Create
@@ -55,16 +65,30 @@ namespace VPM.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TaskId,Title,Description,BillableTime,CreateDate,EndDate,ProjectId")] Models.Task task)
+        public async Task<IActionResult> Create([Bind("TaskId,Title,Description,BillableTime,CreateDate,EndDate,ProjectId,CostPerHour")] Models.Task task)
         {
             if (ModelState.IsValid)
             {
+                task.TaskCost = CalculateTaskCost(task);
+
                 _context.Add(task);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", task.ProjectId);
             return View(task);
+        }
+
+        private decimal? CalculateTaskCost(Models.Task task)
+        {
+            if (task.BillableTime.HasValue)
+            {
+                string billableTimeString = task.BillableTime.Value.ToShortTimeString();
+                decimal time = Convert.ToDecimal(TimeSpan.Parse(billableTimeString).TotalHours);
+
+                return time * task.CostPerHour;
+            }
+            return 0;
         }
 
         // GET: Tasks/Edit/5
@@ -80,6 +104,7 @@ namespace VPM.Controllers
             {
                 return NotFound();
             }
+            task.TaskCost = CalculateTaskCost(task);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", task.ProjectId);
             return View(task);
         }

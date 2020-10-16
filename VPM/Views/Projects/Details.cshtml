@@ -1,4 +1,5 @@
-﻿@model VPM.Models.Project
+﻿@using VPM.Models
+@model Project
 
 @{
     ViewData["Title"] = "Details";
@@ -48,7 +49,8 @@
         </dd>
 
     </dl>
-
+    <h4>Associated tasks</h4>
+    <hr />
     <div>
         <table class="table">
             <thead>
@@ -57,6 +59,7 @@
                     <th>@Html.DisplayNameFor(model => model.Task.FirstOrDefault().Description)</th>
                     <th>@Html.DisplayNameFor(model => model.Task.FirstOrDefault().CreateDate)</th>
                     <th>@Html.DisplayNameFor(model => model.Task.FirstOrDefault().BillableTime)</th>
+                    <th>@Html.DisplayNameFor(model => model.Task.FirstOrDefault().TaskCost)</th>
                 </tr>
             </thead>
             @foreach (VPM.Models.Task task in Model.Task)
@@ -67,11 +70,14 @@
                         <td>@task.Description</td>
                         <td>@task.CreateDate</td>
                         <td>@task.BillableTime?.ToString("HH:mm")</td>
+                        <td>@task.TaskCost</td>
                     </tr>
                 </tbody>
             }
         </table>
     </div>
+    <h4>Costs</h4>
+    <hr />
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TotalBillableTime)
@@ -79,10 +85,17 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.TotalBillableTime)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalProjectCost)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalProjectCost)
+        </dd>
     </dl>
 
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ProjectId">Edit</a> |
+    <a asp-action="Invoice" asp-route-id="@Model.ProjectId">Print</a> |
     <a asp-action="Index">Back to List</a>
 </div>

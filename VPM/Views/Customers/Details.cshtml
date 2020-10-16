@@ -7,32 +7,71 @@
 <h1><i class="fa-margin-5 fas fa-user-tie"></i>Customer Details</h1>
 
 <div>
-    
+
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VatNumber)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VatNumber)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Address)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Address)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ZipCode)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ZipCode)
+        </dd>
+    </dl>
+    <h4>Associated tasks</h4>
+    <hr />
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.ClientProjects.FirstOrDefault().Title)</th>
+                    <th>@Html.DisplayNameFor(model => model.ClientProjects.FirstOrDefault().CreateDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.ClientProjects.FirstOrDefault().TotalBillableTime)</th>
+                    <th>@Html.DisplayNameFor(model => model.ClientProjects.FirstOrDefault().TotalProjectCost)</th>
+                </tr>
+            </thead>
+            @foreach (VPM.Models.Project project in Model.ClientProjects)
+            {
+                <tbody>
+                    <tr>
+                        <td>@project.Title</td>
+                        <td>@project.CreateDate.ToShortDateString()</td>
+                        <td>@project.TotalBillableTime</td>
+                        <td>@project.TotalProjectCost</td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalCustomerBillableTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalCustomerBillableTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalCustomerProjectCost)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalCustomerProjectCost)
         </dd>
     </dl>
 </div>

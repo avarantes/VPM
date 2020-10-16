@@ -5,6 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201014222641_Initial.cs" />
+    <Compile Remove="Migrations\20201014222641_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20201015172446_Inital.cs" />
+    <Compile Remove="Migrations\20201015172446_Inital.Designer.cs" />
+    <Compile Remove="Migrations\20201015172556_Inital.cs" />
+    <Compile Remove="Migrations\20201015172556_Inital.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="jsreport.AspNetCore" Version="2.1.0" />
+    <PackageReference Include="jsreport.Binary" Version="2.9.0" />
+    <PackageReference Include="jsreport.Local" Version="2.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">

@@ -128,11 +128,20 @@ namespace VPM.Migrations
                         new
                         {
                             ProjectId = 1,
-                            CreateDate = new DateTime(2020, 10, 12, 23, 26, 41, 379, DateTimeKind.Local).AddTicks(1825),
+                            CreateDate = new DateTime(2020, 10, 13, 19, 1, 34, 957, DateTimeKind.Local).AddTicks(276),
                             CustomerId = 1,
-                            DeliveryDate = new DateTime(2020, 10, 24, 23, 26, 41, 381, DateTimeKind.Local).AddTicks(2512),
+                            DeliveryDate = new DateTime(2020, 10, 25, 19, 1, 34, 958, DateTimeKind.Local).AddTicks(9831),
                             Description = "Sample Project Description A1",
                             Title = "Sample project A1"
+                        },
+                        new
+                        {
+                            ProjectId = 2,
+                            CreateDate = new DateTime(2020, 10, 13, 19, 1, 34, 959, DateTimeKind.Local).AddTicks(1153),
+                            CustomerId = 4,
+                            DeliveryDate = new DateTime(2020, 12, 4, 19, 1, 34, 959, DateTimeKind.Local).AddTicks(1185),
+                            Description = "Sample Project Description D2",
+                            Title = "Sample project D2"
                         });
                 });
 
@@ -146,6 +155,9 @@ namespace VPM.Migrations
                     b.Property<DateTime?>("BillableTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("CostPerHour")
+                        .HasColumnType("decimal(16,4)");
+
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
@@ -158,6 +170,9 @@ namespace VPM.Migrations
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("TaskCost")
+                        .HasColumnType("decimal(16,4)");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(250)")

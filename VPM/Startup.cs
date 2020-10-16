@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using jsreport.AspNetCore;
+using jsreport.Binary;
+using jsreport.Local;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VPM.Data;
+
 
 namespace VPM
 {
@@ -27,6 +26,13 @@ namespace VPM
         {
             services.AddDbContext<VPMDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnectionString")));
             services.AddControllersWithViews();
+
+            services.AddMvc();
+            services.AddJsReport(new LocalReporting()
+                .UseBinary(JsReportBinary.GetBinary())
+                .AsUtility()
+                .Create());
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,11 +63,9 @@ namespace VPM
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            
         }
 
-        private  static void UpdateDatabase(IApplicationBuilder app)
+        private static void UpdateDatabase(IApplicationBuilder app)
         {
             using (IServiceScope service = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {

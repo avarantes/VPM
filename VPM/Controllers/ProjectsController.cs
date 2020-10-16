@@ -1,21 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using jsreport.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VPM.Data;
 using VPM.Models;
+using VPM.Services;
 
 namespace VPM.Controllers
 {
     public class ProjectsController : Controller
     {
+        
         private readonly VPMDBContext _context;
-
+        private readonly ProjectServices projectServices;
         public ProjectsController(VPMDBContext context)
         {
             _context = context;
+            projectServices = new ProjectServices();
         }
 
         // GET: Projects
@@ -42,26 +45,13 @@ namespace VPM.Controllers
 
             project.Task = _context.Task.Where(n => n.ProjectId == project.ProjectId).ToHashSet();
 
-            project.TotalBillableTime = SumBillableTime(project.Task);
+            projectServices.SumBillableTime(project);
+
 
             return View(project);
         }
 
-        private string SumBillableTime(System.Collections.Generic.ICollection<Models.Task> tasks)
-        {
-            TimeSpan outPutSpan = new TimeSpan();
-            if (tasks.Any())
-            {
-                foreach (Models.Task task in tasks)
-                {
-                    TimeSpan taskTime = TimeSpan.Parse(task.BillableTime?.ToString("HH:mm"));
-
-                    outPutSpan += taskTime;
-                }
-                return Math.Truncate(outPutSpan.TotalHours).ToString("00") + ":" + outPutSpan.Minutes.ToString("00");
-            }
-            return "00:00";
-        }
+       
 
         // GET: Projects/Create
         public IActionResult Create()
@@ -168,6 +158,29 @@ namespace VPM.Controllers
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [MiddlewareFilter(typeof(JsReportPipeline))]
+        public async Task<IActionResult> Invoice(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Project project = await _context.Projects.Include(p => p.Customer).FirstOrDefaultAsync(m => m.ProjectId == id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            project.Task = _context.Task.Where(n => n.ProjectId == project.ProjectId).ToHashSet();
+
+            projectServices.SumBillableTime(project);
+
+            HttpContext.JsReportFeature().Recipe(jsreport.Types.Recipe.ChromePdf);
+            return View(project);
         }
 
         private bool ProjectExists(int id)

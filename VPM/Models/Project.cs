@@ -7,6 +7,7 @@ namespace VPM.Models
 {
     public class Project
     {
+        
         #region Fields
 
         [Key]
@@ -28,7 +29,7 @@ namespace VPM.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [Display(Name = "End")]
         public DateTime? EndDate { get; set; }
-        
+
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [Display(Name = "Delivery")]
@@ -48,9 +49,15 @@ namespace VPM.Models
         #endregion Relations
 
         #region NotMapped
+
         [NotMapped]
         [Display(Name = "Total billable time")]
         public string TotalBillableTime { get; set; }
-        #endregion
+
+        [NotMapped]
+        [Display(Name = "Total cost (€)")]
+        public string TotalProjectCost { get; set; }
+
+        #endregion NotMapped
     }
 }

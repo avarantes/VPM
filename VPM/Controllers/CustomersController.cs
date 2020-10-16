@@ -1,24 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VPM.Data;
 using VPM.Models;
+using VPM.Services;
 
 namespace VPM.Controllers
 {
     public class CustomersController : Controller
     {
         private readonly VPMDBContext _context;
-
+        private readonly ProjectServices projectServices;
         public CustomersController(VPMDBContext context)
         {
             _context = context;
+            projectServices = new ProjectServices();
         }
 
         // GET: Customers
         public async Task<IActionResult> Index()
         {
+
             return View(await _context.Customers.ToListAsync());
         }
 
@@ -35,6 +39,16 @@ namespace VPM.Controllers
             if (customer == null)
             {
                 return NotFound();
+            }
+
+            customer.ClientProjects = await _context.Projects.Where(n => n.CustomerId == customer.CustomerId).Include(t=>t.Task).ToListAsync();
+            if (customer.ClientProjects.Any())
+            {
+                foreach (Project project in customer.ClientProjects)
+                {
+                    projectServices.SumBillableTime(project);                    
+                }
+                projectServices.SumCustomerBillables(customer);
             }
 
             return View(customer);

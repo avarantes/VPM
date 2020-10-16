@@ -25,8 +25,8 @@ namespace VPM.Data
                 );
 
             modelBuilder.Entity<Project>().HasData(
-               new Project { ProjectId=1, CreateDate = DateTime.Now.AddDays(-2), CustomerId = 1, DeliveryDate = DateTime.Now.AddDays(10), Description = "Sample Project Description A1", Title = "Sample project A1" }
-
+               new Project { ProjectId = 1, CreateDate = DateTime.Now.AddDays(-2), CustomerId = 1, DeliveryDate = DateTime.Now.AddDays(10), Description = "Sample Project Description A1", Title = "Sample project A1" },
+               new Project { ProjectId = 2, CreateDate = DateTime.Now.AddDays(-2), CustomerId = 4, DeliveryDate = DateTime.Now.AddDays(50), Description = "Sample Project Description D2", Title = "Sample project D2" }
                );
         }
     }

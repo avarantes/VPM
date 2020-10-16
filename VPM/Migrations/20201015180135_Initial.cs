@@ -56,8 +56,10 @@ namespace VPM.Migrations
                     Title = table.Column<string>(maxLength: 250, nullable: true),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
                     BillableTime = table.Column<DateTime>(nullable: true),
+                    CostPerHour = table.Column<decimal>(type: "decimal(16,4)", nullable: false),
                     CreateDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: true),
+                    TaskCost = table.Column<decimal>(type: "decimal(16,4)", nullable: true),
                     ProjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -86,7 +88,12 @@ namespace VPM.Migrations
             migrationBuilder.InsertData(
                 table: "Projects",
                 columns: new[] { "ProjectId", "CreateDate", "CustomerId", "DeliveryDate", "Description", "EndDate", "Title" },
-                values: new object[] { 1, new DateTime(2020, 10, 12, 23, 26, 41, 379, DateTimeKind.Local).AddTicks(1825), 1, new DateTime(2020, 10, 24, 23, 26, 41, 381, DateTimeKind.Local).AddTicks(2512), "Sample Project Description A1", null, "Sample project A1" });
+                values: new object[] { 1, new DateTime(2020, 10, 13, 19, 1, 34, 957, DateTimeKind.Local).AddTicks(276), 1, new DateTime(2020, 10, 25, 19, 1, 34, 958, DateTimeKind.Local).AddTicks(9831), "Sample Project Description A1", null, "Sample project A1" });
+
+            migrationBuilder.InsertData(
+                table: "Projects",
+                columns: new[] { "ProjectId", "CreateDate", "CustomerId", "DeliveryDate", "Description", "EndDate", "Title" },
+                values: new object[] { 2, new DateTime(2020, 10, 13, 19, 1, 34, 959, DateTimeKind.Local).AddTicks(1153), 4, new DateTime(2020, 12, 4, 19, 1, 34, 959, DateTimeKind.Local).AddTicks(1185), "Sample Project Description D2", null, "Sample project D2" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_CustomerId",
